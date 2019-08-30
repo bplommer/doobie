@@ -88,14 +88,14 @@ object StreamingCopy extends IOApp {
     HC.delay(Console.println(s"$tag: $s")) <* _
 
   /** Derive a new transactor that logs stuff. */
-  def addLogging[F[_], A](name: String)(xa: Transactor[F]): Transactor[F] = {
+  def addLogging[F[_], A](name: String)(xa: Transactor.Aux[F, A]): Transactor.Aux[F, A] = {
     import Transactor._ // bring the lenses into scope
-    val update: State[Transactor[F], Unit] =
+    val update: State[Transactor.Aux[F, A], Unit] =
       for {
         _ <- before %= printBefore(name, "before - setting up the connection")
-        _ <- after  %= printBefore(name, "after - committing")
-        _ <- oops   %= printBefore(name, "oops - rolling back")
-        _ <- always %= printBefore(name, "always - closing")
+        _ <- after   %= printBefore(name, "after - committing")
+        _ <- oops    %= printBefore(name, "oops - rolling back")
+        _ <- always  %= printBefore(name, "always - closing")
       } yield ()
     update.runS(xa).value
   }

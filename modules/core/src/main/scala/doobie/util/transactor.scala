@@ -248,12 +248,12 @@ object transactor  {
 
     /** @group Lenses */ def kernel   [M[_], A]: Transactor.Aux[M, A] Lens A                              = Lens(_.kernel,    (a, b) => a.copy(kernel0    = b))
     /** @group Lenses */ def connect  [M[_], A]: Transactor.Aux[M, A] Lens (A => Resource[M, Connection]) = Lens(_.connect,   (a, b) => a.copy(connect0   = b))
-    /** @group Lenses */ def interpret[M[_]]: Transactor[M] Lens Interpreter[M]       = Lens(_.interpret, (a, b) => a.copy(interpret0 = b))
-    /** @group Lenses */ def strategy [M[_]]: Transactor[M] Lens Strategy             = Lens(_.strategy,  (a, b) => a.copy(strategy0  = b))
-    /** @group Lenses */ def before   [M[_]]: Transactor[M] Lens ConnectionIO[Unit]   = strategy[M] >=> Strategy.before
-    /** @group Lenses */ def after    [M[_]]: Transactor[M] Lens ConnectionIO[Unit]   = strategy[M] >=> Strategy.after
-    /** @group Lenses */ def oops     [M[_]]: Transactor[M] Lens ConnectionIO[Unit]   = strategy[M] >=> Strategy.oops
-    /** @group Lenses */ def always   [M[_]]: Transactor[M] Lens ConnectionIO[Unit]   = strategy[M] >=> Strategy.always
+    /** @group Lenses */ def interpret[M[_], A]: Transactor.Aux[M, A] Lens Interpreter[M]       = Lens(_.interpret, (a, b) => a.copy(interpret0 = b))
+    /** @group Lenses */ def strategy [M[_], A]: Transactor.Aux[M, A] Lens Strategy             = Lens(_.strategy,  (a, b) => a.copy(strategy0  = b))
+    /** @group Lenses */ def before   [M[_], A]: Transactor.Aux[M, A] Lens ConnectionIO[Unit]   = strategy[M, A] >=> Strategy.before
+    /** @group Lenses */ def after    [M[_], A]: Transactor.Aux[M, A] Lens ConnectionIO[Unit]   = strategy[M, A] >=> Strategy.after
+    /** @group Lenses */ def oops     [M[_], A]: Transactor.Aux[M, A] Lens ConnectionIO[Unit]   = strategy[M, A] >=> Strategy.oops
+    /** @group Lenses */ def always   [M[_], A]: Transactor.Aux[M, A] Lens ConnectionIO[Unit]   = strategy[M, A] >=> Strategy.always
 
     /**
      * Construct a constructor of `Transactor[M, D]` for some `D <: DataSource` by partial
